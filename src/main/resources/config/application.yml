@@ -1,0 +1,130 @@
+# ===================================================================
+# Spring Boot configuration.
+#
+# This configuration will be overridden by the Spring profile you use,
+# for example application-dev.yml if you use the "dev" profile.
+#
+# Full reference for Standard Spring Boot properties is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+# set -Dspring.profiles.active=<dev|sit|int> as JVM argument to run in desired profile
+# If no profile is specified explicitly, application will fall back to default profile, which is "local"
+
+spring:
+  application:
+    name: spring-cloud-api-grateway-azuread-auth
+  main:
+    web-application-type: reactive
+    log-startup-info: true
+  jmx:
+    enabled: false
+  devtools:
+    add-properties: false
+    restart:
+      enabled: false
+      exclude: logs/*,application.log,*.log,*.log.*
+#  autoconfigure:
+#    exclude:
+#      - org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration
+
+  messages:
+    basename: i18n/messages,i18n/errors,i18n/problems
+    cache-duration: PT10S # 10 second, see the ISO 8601 standard
+    fallback-to-system-locale: true
+    always-use-message-format: false
+    use-code-as-default-message: false
+
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+#------------------------- API Gateway configuration -------------------------
+    gateway:
+      routes:
+        - id: book-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/**
+          filters:
+            - StripPrefix=2
+#------------------------- Azure AD configuration -------------------------
+    azure:
+      active-directory:
+        enabled: true
+        profile:
+          tenant-id: ${AZURE_AD_TENANT_ID}
+        credential:
+          client-id: ${AZURE_AD_CLIENT_ID}
+          client-secret: ${AZURE_AD_CLIENT_SECRET}
+
+  security:
+    oauth2:
+      client:
+        registration:
+          azure:
+            client-id: ${spring.cloud.azure.active-directory.credential.client-id}
+            client-secret: ${spring.cloud.azure.active-directory.credential.client-secret}
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: openid, profile, email
+        provider:
+          azure:
+            authorization-uri: https://login.microsoftonline.com/${spring.cloud.azure.active-directory.profile.tenant-id}/oauth2/v2.0/authorize
+            token-uri: https://login.microsoftonline.com/${spring.cloud.azure.active-directory.profile.tenant-id}/oauth2/v2.0/token
+            user-info-uri: https://graph.microsoft.com/oidc/userinfo
+            jwk-set-uri: https://login.microsoftonline.com/${spring.cloud.azure.active-directory.profile.tenant-id}/discovery/v2.0/keys
+
+#------------------------- Swagger configuration -------------------------
+springdoc:
+  show-actuator: true
+  group-configs:
+    - group: actuator
+      display-name: Actuator
+      paths-to-match: /actuator/**
+#    - group: api
+#      display-name: Api
+#      paths-to-match: /**/api/**
+  swagger-ui:
+    syntaxHighlight:
+      activated: true
+
+#------------------------- Actuators configuration -------------------------
+# If not specified '/actuator' is taken as default. If specified must start with '/'
+#management.endpoints.web.base-path=/
+# Set it as "*", if you want to expose all actuator endpoints
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: info,health,metrics
+#        include: *
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+problem:
+  type-url: http://localhost:8080/problems/help.html
+  debug-enabled: false
+  stacktrace-enabled: false
+  cause-chains-enabled: false
+
+server:
+  port: 8080
+#  forward-headers-strategy: framework
+  forward-headers-strategy: native
+#    servlet:
+#        context-path: /api
+logging:
+  level:
+    ROOT: DEBUG
+#    '[org.mongodb.driver]': warn
+debug: false
+
+# ===================================================================
+# Application specific properties
+# Add your own application properties here
+# ===================================================================
