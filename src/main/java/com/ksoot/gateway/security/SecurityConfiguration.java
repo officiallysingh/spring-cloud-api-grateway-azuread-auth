@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.Nullable;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -68,16 +69,16 @@ class SecurityConfiguration {
                     //                    .permitAll()
                     .anyExchange()
                     .authenticated())
-                    .oauth2Login()
-//        .exceptionHandling(
-//            exceptionHandling ->
-//                exceptionHandling.authenticationEntryPoint(
-//                    new RedirectServerAuthenticationEntryPoint("/login/oauth2")))
-//        .oauth2Login(
-//            oauth2 ->
-//                oauth2.authenticationMatcher(
-//                    new PathPatternParserServerWebExchangeMatcher(
-//                        "/login/oauth2/callback/{registrationId}")))
+        .oauth2Login(Customizer.withDefaults())
+    //        .exceptionHandling(
+    //            exceptionHandling ->
+    //                exceptionHandling.authenticationEntryPoint(
+    //                    new RedirectServerAuthenticationEntryPoint("/login/oauth2")))
+    //        .oauth2Login(
+    //            oauth2 ->
+    //                oauth2.authenticationMatcher(
+    //                    new PathPatternParserServerWebExchangeMatcher(
+    //                        "/login/oauth2/callback/{registrationId}")))
     ;
 
     //    if (this.authenticationEntryPoint != null) {
