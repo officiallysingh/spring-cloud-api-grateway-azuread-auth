@@ -12,9 +12,7 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.ServerAuthenticationEntryPoint;
-import org.springframework.security.web.server.authentication.RedirectServerAuthenticationEntryPoint;
 import org.springframework.security.web.server.authorization.ServerAccessDeniedHandler;
-import org.springframework.security.web.server.util.matcher.PathPatternParserServerWebExchangeMatcher;
 
 /**
  * @author Rajveer Singh
@@ -69,51 +67,7 @@ class SecurityConfiguration {
                     //                    .permitAll()
                     .anyExchange()
                     .authenticated())
-        .oauth2Login(Customizer.withDefaults())
-    //        .exceptionHandling(
-    //            exceptionHandling ->
-    //                exceptionHandling.authenticationEntryPoint(
-    //                    new RedirectServerAuthenticationEntryPoint("/login/oauth2")))
-    //        .oauth2Login(
-    //            oauth2 ->
-    //                oauth2.authenticationMatcher(
-    //                    new PathPatternParserServerWebExchangeMatcher(
-    //                        "/login/oauth2/callback/{registrationId}")))
-    ;
-
-    //    if (this.authenticationEntryPoint != null) {
-    //      http.exceptionHandling(
-    //          exceptionHandling ->
-    //              exceptionHandling.authenticationEntryPoint(this.authenticationEntryPoint));
-    //    }
-    //    if (this.accessDeniedHandler != null) {
-    //      http.exceptionHandling(
-    //          exceptionHandling ->
-    // exceptionHandling.accessDeniedHandler(this.accessDeniedHandler));
-    //    }
+        .oauth2Login(Customizer.withDefaults());
     return http.build();
   }
-
-  //  @Bean
-  //  public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-  //    http
-  //            .exceptionHandling(exceptionHandling -> exceptionHandling
-  //                    .authenticationEntryPoint(new
-  // RedirectServerAuthenticationEntryPoint("/login/oauth2"))
-  //            )
-  //            .oauth2Login(oauth2 -> oauth2
-  //                    .authorizationRequestResolver(this.authorizationRequestResolver())
-  //            );
-  //
-  //    return http.build();
-  //  }
-  //
-  //  private ServerOAuth2AuthorizationRequestResolver authorizationRequestResolver() {
-  //    ServerWebExchangeMatcher authorizationRequestMatcher =
-  //            new PathPatternParserServerWebExchangeMatcher(
-  //                    "/login/oauth2/authorization/{registrationId}");
-  //
-  //    return new DefaultServerOAuth2AuthorizationRequestResolver(
-  //            this.clientRegistrationRepository(), authorizationRequestMatcher);
-  //  }
 }
