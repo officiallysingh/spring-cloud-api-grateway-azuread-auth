@@ -61,6 +61,7 @@ spring:
             user-info-uri: https://graph.microsoft.com/oidc/userinfo
             jwk-set-uri: https://login.microsoftonline.com/${spring.cloud.azure.active-directory.profile.tenant-id}/discovery/v2.0/keys
             issuer-uri: https://login.microsoftonline.com/${spring.cloud.azure.active-directory.profile.tenant-id}/v2.0
+#           userNameAttribute: unique_name
 ```
 
 ## Run
