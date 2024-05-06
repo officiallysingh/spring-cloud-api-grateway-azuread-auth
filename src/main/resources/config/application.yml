@@ -124,6 +124,8 @@ logging:
   level:
     ROOT: DEBUG
     '[org.springframework.security]': debug
+    '[org.springframework.cloud.gateway]': debug
+    '[org.springframework.webflux]': debug
 debug: false
 
 # ===================================================================
