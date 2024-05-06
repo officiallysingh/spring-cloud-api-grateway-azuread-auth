@@ -46,7 +46,8 @@ spring:
           predicates:
             - Path=/api/**
           filters:
-            - StripPrefix=2
+            - TokenRelay=
+#            - StripPrefix=2
 #------------------------- Azure AD configuration -------------------------
     azure:
       active-directory:
@@ -73,7 +74,8 @@ spring:
             token-uri: https://login.microsoftonline.com/${spring.cloud.azure.active-directory.profile.tenant-id}/oauth2/v2.0/token
             user-info-uri: https://graph.microsoft.com/oidc/userinfo
             jwk-set-uri: https://login.microsoftonline.com/${spring.cloud.azure.active-directory.profile.tenant-id}/discovery/v2.0/keys
-
+            issuer-uri: https://login.microsoftonline.com/${spring.cloud.azure.active-directory.profile.tenant-id}/v2.0
+#            userNameAttribute: preferred_username
 #------------------------- Swagger configuration -------------------------
 springdoc:
   show-actuator: true
@@ -121,7 +123,7 @@ server:
 logging:
   level:
     ROOT: DEBUG
-#    '[org.mongodb.driver]': warn
+    '[org.springframework.security]': debug
 debug: false
 
 # ===================================================================
